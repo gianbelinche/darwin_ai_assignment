@@ -16,7 +16,9 @@ services:
       retries: 10
 
   bot-service:
-    build: ./bot-service
+    build:
+      context: .
+      dockerfile: bot-service/Dockerfile
     env_file: ./bot-service/.env
     ports:
       - "8000:8000"
@@ -25,7 +27,9 @@ services:
         condition: service_healthy
 
   connector-service:
-    build: ./connector-service
+    build:
+      context: .
+      dockerfile: connector-service/Dockerfile
     env_file: ./connector-service/.env
     ports:
       - "3000:3000"
