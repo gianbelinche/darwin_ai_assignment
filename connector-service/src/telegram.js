@@ -11,11 +11,15 @@ const TELEGRAM_API = `https://api.telegram.org/bot${config.telegramToken}`;
  */
 export async function sendMessage(chatId, text) {
   try {
-    await fetch(`${TELEGRAM_API}/sendMessage`, {
+    const res = await fetch(`${TELEGRAM_API}/sendMessage`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ chat_id: chatId, text }),
     });
+    const body = await res.json();
+    if (!body.ok) {
+      console.error("Telegram sendMessage failed:", JSON.stringify(body));
+    }
   } catch (err) {
     console.error("Failed to send Telegram message:", err.message);
   }
