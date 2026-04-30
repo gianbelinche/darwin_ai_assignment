@@ -9,6 +9,9 @@ engine = create_async_engine(
     settings.database_url,
     pool_size=10,
     max_overflow=20,
+    # Required when connecting through PgBouncer in transaction mode (e.g. Supabase pooler).
+    # PgBouncer doesn't support asyncpg's prepared statement cache across connections.
+    connect_args={"statement_cache_size": 0},
 )
 
 # expire_on_commit=False keeps ORM objects usable after session.commit() in async
