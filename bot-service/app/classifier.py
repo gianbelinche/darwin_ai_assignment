@@ -44,8 +44,12 @@ class ExpenseClassification(BaseModel):
 
 
 def _build_chain():
-    # Langchain imports are deferred here so the module can be imported (and
-    # its types used in tests) without langchain installed in the environment.
+    """
+    Construct the LangChain pipeline: prompt → LLM with structured output.
+
+    Imports are deferred so the module can be imported (and its types used in
+    tests) without langchain installed in the environment.
+    """
     from langchain_core.prompts import ChatPromptTemplate
 
     if settings.llm_provider == "groq":
@@ -77,6 +81,7 @@ _chain = None
 
 
 def _get_chain():
+    """Return the chain singleton, building it on the first real request."""
     global _chain
     if _chain is None:
         _chain = _build_chain()
