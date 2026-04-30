@@ -58,7 +58,7 @@ async def process_message(
     )
     session.add(expense)
     await session.commit()
-    logger.info("saved expense for user %s: %r £%s [%s]",
+    logger.info("saved expense for user %s: %r %s [%s]",
                 req.telegram_id, result.description, result.amount, result.category)
 
     return {

@@ -11,6 +11,9 @@ engine = create_async_engine(
     max_overflow=20,
 )
 
+# expire_on_commit=False keeps ORM objects usable after session.commit() in async
+# context — without it, accessing attributes post-commit triggers lazy loads that
+# fail inside an already-closed async session.
 AsyncSessionFactory = async_sessionmaker(engine, expire_on_commit=False)
 
 
