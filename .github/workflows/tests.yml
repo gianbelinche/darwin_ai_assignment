@@ -1,0 +1,56 @@
+name: Tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  bot-service:
+    name: Bot Service (Python)
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: bot-service
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: bot-service/requirements.txt
+
+      - name: Install dependencies
+        run: pip install pydantic pydantic-settings pytest pytest-asyncio
+
+      - name: Run tests
+        run: pytest tests/ -v
+        env:
+          DATABASE_URL: postgresql+asyncpg://test:test@localhost/test
+          LLM_API_KEY: sk-test
+          LLM_MODEL: gpt-4o-mini
+
+  connector-service:
+    name: Connector Service (Node.js)
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: connector-service
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: connector-service/package-lock.json
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        run: npm test
